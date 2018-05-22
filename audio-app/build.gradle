@@ -34,7 +34,7 @@ android {
 dependencies {
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:support-media-compat:27.1.1'
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.8.0'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.8.0'
-    implementation 'com.google.android.exoplayer:extension-mediasession:2.8.0'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.8.1'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.8.1'
+    implementation 'com.google.android.exoplayer:extension-mediasession:2.8.1'
 }
