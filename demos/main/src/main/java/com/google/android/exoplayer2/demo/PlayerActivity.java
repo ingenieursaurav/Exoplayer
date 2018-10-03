@@ -35,6 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.C.ContentType;
+import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -430,7 +431,13 @@ public class PlayerActivity extends Activity
 
       player =
           ExoPlayerFactory.newSimpleInstance(
-              /* context= */ this, renderersFactory, trackSelector, drmSessionManager);
+              /* context= */ this,
+              renderersFactory,
+              trackSelector,
+              new DefaultLoadControl.Builder()
+                  .setBufferDurationsMs(10000, 10000, 0, 0)
+                  .createDefaultLoadControl(),
+              drmSessionManager);
       player.addListener(new PlayerEventListener());
       player.setPlayWhenReady(startAutoPlay);
       player.addAnalyticsListener(new EventLogger(trackSelector));
@@ -482,6 +489,7 @@ public class PlayerActivity extends Activity
         return new DashMediaSource.Factory(dataSourceFactory)
             .setManifestParser(
                 new FilteringManifestParser<>(new DashManifestParser(), getOfflineStreamKeys(uri)))
+            .setLivePresentationDelayMs(0, true)
             .createMediaSource(uri);
       case C.TYPE_SS:
         return new SsMediaSource.Factory(dataSourceFactory)

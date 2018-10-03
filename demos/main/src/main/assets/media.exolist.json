@@ -1,5 +1,14 @@
 [
   {
+    "name": "Low latency DASH",
+    "samples": [
+      {
+        "name": "Low latency",
+        "uri": "https://vm2.dashif.org/livesim-chunked/chunkdur_1/ato_7/testpic4_8s/Manifest300.mpd"
+      }
+    ]
+  },
+  {
     "name": "YouTube DASH",
     "samples": [
       {
