@@ -15,11 +15,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     defaultConfig {
         applicationId "com.google.android.exoplayer.videodemo"
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
     }
@@ -32,7 +35,7 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.8.1'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.8.1'
-    implementation 'com.google.android.exoplayer:extension-ima:2.8.1'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.9.5'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.9.5'
+    implementation 'com.google.android.exoplayer:extension-ima:2.9.5'
 }
