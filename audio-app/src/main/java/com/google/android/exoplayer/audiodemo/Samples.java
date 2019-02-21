@@ -50,19 +50,19 @@ public final class Samples {
 
   public static final Sample[] SAMPLES = new Sample[] {
       new Sample(
-          "http://storage.googleapis.com/automotive-media/Jazz_In_Paris.mp3",
+          "https://storage.googleapis.com/automotive-media/Jazz_In_Paris.mp3",
           "audio_1",
           "Jazz in Paris",
           "Jazz for the masses",
           R.drawable.album_art_1),
       new Sample(
-          "http://storage.googleapis.com/automotive-media/The_Messenger.mp3",
+          "https://storage.googleapis.com/automotive-media/The_Messenger.mp3",
           "audio_2",
           "The messenger",
           "Hipster guide to London",
           R.drawable.album_art_2),
       new Sample(
-          "http://storage.googleapis.com/automotive-media/Talkies.mp3",
+          "https://storage.googleapis.com/automotive-media/Talkies.mp3",
           "audio_3",
           "Talkies",
           "If it talks like a duck and walks like a duck.",

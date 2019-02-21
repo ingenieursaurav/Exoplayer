@@ -53,14 +53,15 @@ public class MainActivity extends Activity {
 
     player = ExoPlayerFactory.newSimpleInstance(this, new DefaultTrackSelector());
     playerView.setPlayer(player);
+    adsLoader.setPlayer(player);
 
     DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(
         this,
         Util.getUserAgent(this, getString(R.string.application_name)));
     ExtractorMediaSource mediaSource = new ExtractorMediaSource.Factory(dataSourceFactory)
         .createMediaSource(MP4_URI);
-    MediaSource adsMediaSource = new AdsMediaSource(
-        mediaSource, dataSourceFactory, adsLoader, playerView.getOverlayFrameLayout());
+    MediaSource adsMediaSource =
+        new AdsMediaSource(mediaSource, dataSourceFactory, adsLoader, playerView);
     player.prepare(adsMediaSource);
 
     player.setPlayWhenReady(true);
@@ -68,6 +69,7 @@ public class MainActivity extends Activity {
 
   @Override
   protected void onStop() {
+    adsLoader.setPlayer(null);
     playerView.setPlayer(null);
     player.release();
     player = null;
