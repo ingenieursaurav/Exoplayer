@@ -18,11 +18,12 @@ package com.google.android.exoplayer2.ui;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Canvas;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.view.View;
+import android.view.ViewGroup;
 import android.view.accessibility.CaptioningManager;
+import android.webkit.WebView;
 import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.text.CaptionStyleCompat;
 import com.google.android.exoplayer2.text.Cue;
@@ -31,10 +32,8 @@ import com.google.android.exoplayer2.util.Util;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A view for displaying subtitle {@link Cue}s.
- */
-public final class SubtitleView extends View implements TextOutput {
+/** A view for displaying subtitle {@link Cue}s. */
+public final class SubtitleView extends ViewGroup implements TextOutput {
 
   /**
    * The default fractional text size.
@@ -61,6 +60,8 @@ public final class SubtitleView extends View implements TextOutput {
   private CaptionStyleCompat style;
   private float bottomPaddingFraction;
 
+  private WebView webView;
+
   public SubtitleView(Context context) {
     this(context, /* attrs= */ null);
   }
@@ -74,6 +75,10 @@ public final class SubtitleView extends View implements TextOutput {
     applyEmbeddedFontSizes = true;
     style = CaptionStyleCompat.DEFAULT;
     bottomPaddingFraction = DEFAULT_BOTTOM_PADDING_FRACTION;
+
+    webView = new WebView(context, attrs);
+    addView(webView);
+    webView.setBackgroundColor(Color.TRANSPARENT);
   }
 
   @Override
@@ -96,6 +101,21 @@ public final class SubtitleView extends View implements TextOutput {
     while (painters.size() < cueCount) {
       painters.add(new SubtitlePainter(getContext()));
     }
+
+    StringBuilder cueText = new StringBuilder();
+    for (int i = 0; i < cues.size(); i++) {
+      if (i > 0) {
+        cueText.append("<br>");
+      }
+      cueText.append(cues.get(i).text);
+    }
+    webView.loadData(
+        "<html><body><p style=\"color:red;font-size:20px;height:150px\">"
+            + cueText
+            + "</p></body></html>",
+        "text/html",
+        /* encoding= */ null);
+
     // Invalidate to trigger drawing.
     invalidate();
   }
@@ -245,51 +265,8 @@ public final class SubtitleView extends View implements TextOutput {
   }
 
   @Override
-  public void dispatchDraw(Canvas canvas) {
-    List<Cue> cues = this.cues;
-    if (cues == null || cues.isEmpty()) {
-      return;
-    }
-
-    int rawViewHeight = getHeight();
-
-    // Calculate the cue box bounds relative to the canvas after padding is taken into account.
-    int left = getPaddingLeft();
-    int top = getPaddingTop();
-    int right = getWidth() - getPaddingRight();
-    int bottom = rawViewHeight - getPaddingBottom();
-    if (bottom <= top || right <= left) {
-      // No space to draw subtitles.
-      return;
-    }
-    int viewHeightMinusPadding = bottom - top;
-
-    float defaultViewTextSizePx =
-        resolveTextSize(textSizeType, textSize, rawViewHeight, viewHeightMinusPadding);
-    if (defaultViewTextSizePx <= 0) {
-      // Text has no height.
-      return;
-    }
-
-    int cueCount = cues.size();
-    for (int i = 0; i < cueCount; i++) {
-      Cue cue = cues.get(i);
-      float cueTextSizePx = resolveCueTextSize(cue, rawViewHeight, viewHeightMinusPadding);
-      SubtitlePainter painter = painters.get(i);
-      painter.draw(
-          cue,
-          applyEmbeddedStyles,
-          applyEmbeddedFontSizes,
-          style,
-          defaultViewTextSizePx,
-          cueTextSizePx,
-          bottomPaddingFraction,
-          canvas,
-          left,
-          top,
-          right,
-          bottom);
-    }
+  protected void onLayout(boolean changed, int l, int t, int r, int b) {
+    webView.layout(l, t, r, b);
   }
 
   private float resolveCueTextSize(Cue cue, int rawViewHeight, int viewHeightMinusPadding) {
